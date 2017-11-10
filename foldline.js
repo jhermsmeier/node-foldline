@@ -26,7 +26,7 @@ module.exports = function foldLine( input, maxLength, hardWrap ) {
   // (3 bytes + 1 <space> extra because of soft folding)
   maxLength = maxLength - 4
 
-  const CRLF = '\r\n'
+  var CRLF = '\r\n'
 
   var lines = [], len = input.length
   var lastIndex = 0, index = 0
