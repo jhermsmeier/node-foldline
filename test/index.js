@@ -29,9 +29,10 @@ suite( 'foldline', function() {
     var expected = [
       'This string should be way longer than 78 chars. Which should trigger line',
       '  folding. Let\'s see, if this works...',
-      ' f97c055cbb09fd2c4414e698362119866740e271f97c055cbb09fd2c4414e69836211986674',
-      ' 0e271 f97c055cbb09fd2c4414e698362119866740e271f97c055cbb09fd2c4414e69836211',
-      ' 9866740e271'
+      '  f97c055cbb09fd2c4414e698362119866740e271f97c055cbb09fd2c4414e698362119866',
+      ' 740e271',
+      '  f97c055cbb09fd2c4414e698362119866740e271f97c055cbb09fd2c4414e698362119866',
+      ' 740e271'
     ].join( '\r\n' )
 
     var actual = foldLine( input )
@@ -64,7 +65,7 @@ suite( 'foldline', function() {
 
     var input = 'abcdefgh'
     var expected = 'ab\r\n cd\r\n ef\r\n gh'
-    var actual = foldLine( input, 5 )
+    var actual = foldLine( input, 6 )
 
     assert.strictEqual( actual, expected )
 
