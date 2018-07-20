@@ -8,7 +8,6 @@
  * @return {String}
  */
 module.exports = function foldLine( input, maxLength, hardWrap ) {
-
   // Remove any newlines
   input = input.replace( /\r?\n/g, '' )
 
@@ -19,50 +18,63 @@ module.exports = function foldLine( input, maxLength, hardWrap ) {
   maxLength = maxLength != null ? maxLength : 78
 
   // We really don't need to fold this
-  if( input.length <= maxLength )
+  if( input.length <= maxLength ) {
     return input
+  }
 
   // Substract 3 because CRLF<space> is the line delimiter
-  // (3 bytes + 1 <space> extra because of soft folding)
-  maxLength = maxLength - 4
+  // (2 bytes + 1 <space> extra because of folding)
+  // soft folding is automatically taken into account.
+  maxLength = maxLength - 3
 
   var CRLF = '\r\n'
 
   var lines = [], len = input.length
-  var lastIndex = 0, index = 0;
+  var index = 0;
+  var words;
 
-  if (hardWrap) {
-
-    // We remove the one <space> extra here again,
-    // since we're going into hard folding mode
-    maxLength++
+  if (hardWrap || (words = input.split(' ')).length === 1) {
 
     while( index < len ) {
-      lines.push( input.slice( index, index += maxLength ) )
+      // add 1 at the first line, because we start without a space
+      lines.push( input.slice( index, index += (maxLength + (index ? 0 : 1))))
     }
 
-    return lines.join( CRLF + ' ' )
+    return lines.join( CRLF + ' ' );
   }
 
-  while (index < len) {
-    lastIndex = input.lastIndexOf( ' ', maxLength + index )
-    if (input.slice(index).length <= maxLength) {
-      lines.push( input.slice( index ) )
-      break;
+  var j, word;
+  var line = [];
+  var count = 0;
+  for (var i = 0; i < words.length; i++) {
+    word = words[i];
+    if (count + word.length > maxLength && count > 0) {
+      lines.push(line.join(' '));
+      // push a space on the stack, as we will be skipping the first space (soft folding)
+      line = [''];
+      count = 1;
     }
-
-    if (lastIndex <= index) {
-      lines.push(input.slice(index, index + maxLength));
-      index += maxLength;
-      continue;
+    // this will only be taken if we just flushed the lines
+    for (j = 0; word.length - j > maxLength - count;) {
+      // Either we still have a space on the stack from the last word or we are in hardwrap mode:
+      if (count) {
+        // space on the stack
+        lines.push(' ' + word.slice(j, j += maxLength - count));
+        line = [];
+        count = 0;
+      } else {
+        // hardwrap mode
+        lines.push(word.slice(j, j += maxLength));
+      }
     }
-
-
-    lines.push(input.slice( index, lastIndex ) )
-    index = lastIndex
+    // always push the remainder on the stack for the space
+    // count + word.length <= maxLength
+    line.push(j ? word.slice(j) : word);
+    // + 1 for the space
+    count += word.length + 1 - j;
   }
-
-
-  return lines.join( CRLF + ' ' )
-
-}
+  if (count > 1) {
+    lines.push(line.join(' '));
+  }
+  return lines.join(CRLF + ' ' );
+};
