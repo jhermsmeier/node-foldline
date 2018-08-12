@@ -1,6 +1,6 @@
 {
   "name": "foldline",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "author": "Jonas Hermsmeier <jhermsmeier@gmail.com> (https://jhermsmeier.de/)",
   "description": "Folds a long line according to the RFC 5322",
   "license": "MIT",
