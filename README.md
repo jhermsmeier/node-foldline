@@ -39,14 +39,14 @@ foldLine(
 ## Example
 
 ```js
-foldLine( 'Subject: from x.y.test by example.net via TCP with ESMTP id ABC12345 for <mary@example.net>', 32 )
+foldLine( 'Subject: from x.y.test by example.net via TCP with ESMTP id ABC12345 for <mary@example.net>', 30 )
 ```
 
 ```
-Subject: from x.y.test by<CRLF>
-  example.net via TCP with<CRLF>
-  ESMTP id ABC12345 for<CRLF>
- <mary@example.net>
+Subject: from x.y.test by<CR><LF>
+  example.net via TCP with<CR><LF>
+  ESMTP id ABC12345 for<CR><LF>
+  <mary@example.net>
 ```
 
 ## Tests
